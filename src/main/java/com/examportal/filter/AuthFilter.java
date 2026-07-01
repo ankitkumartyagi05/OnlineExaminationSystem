@@ -1,7 +1,6 @@
 package com.examportal.filter;
 
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -10,14 +9,12 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-@WebFilter("/*")
+// ── REMOVED @WebFilter("/*") — web.xml already maps this filter ──
 public class AuthFilter implements Filter {
 
-    // ── Public paths that do NOT require login ──
     private static final Set<String> PUBLIC_PATHS = new HashSet<>();
 
     static {
-        // Pages
         PUBLIC_PATHS.add("/");
         PUBLIC_PATHS.add("/index.jsp");
         PUBLIC_PATHS.add("/login");
@@ -26,8 +23,6 @@ public class AuthFilter implements Filter {
         PUBLIC_PATHS.add("/register.jsp");
         PUBLIC_PATHS.add("/error404.jsp");
         PUBLIC_PATHS.add("/error500.jsp");
-
-        // Static resources (CSS, JS, images, fonts, icons)
         PUBLIC_PATHS.add("/css/");
         PUBLIC_PATHS.add("/js/");
         PUBLIC_PATHS.add("/images/");
@@ -50,106 +45,74 @@ public class AuthFilter implements Filter {
 
         String contextPath = httpRequest.getContextPath();
         String requestURI = httpRequest.getRequestURI();
-        // Strip context path to get the relative path
         String path = requestURI.substring(contextPath.length());
 
-        // ── Step 1: Allow all public paths ──
+        // Allow public paths
         if (isPublicPath(path)) {
             chain.doFilter(request, response);
             return;
         }
 
-        // ── Step 2: For protected paths, check session ──
+        // Check session for protected paths
         HttpSession session = httpRequest.getSession(false);
         Object user = (session != null) ? session.getAttribute("loggedInUser") : null;
 
         if (user == null) {
-            // Not logged in → redirect to login
-            System.out.println("[AuthFilter] No session for protected path: " + path + " → redirecting to login");
             httpResponse.sendRedirect(contextPath + "/login");
             return;
         }
 
-        // ── Step 3: Role-based access control ──
+        // Role-based access
         String role = getUserRole(user);
-        String normalizedPath = path.toLowerCase();
+        String lowerPath = path.toLowerCase();
 
-        if (normalizedPath.startsWith("/admin") && !"ADMIN".equalsIgnoreCase(role)) {
-            System.out.println("[AuthFilter] Non-admin accessing /admin: " + role);
+        if (lowerPath.startsWith("/admin") && !"ADMIN".equalsIgnoreCase(role)) {
+            httpResponse.sendRedirect(contextPath + "/login");
+            return;
+        }
+        if (lowerPath.startsWith("/faculty") && !"FACULTY".equalsIgnoreCase(role)) {
+            httpResponse.sendRedirect(contextPath + "/login");
+            return;
+        }
+        if (lowerPath.startsWith("/student") && !"STUDENT".equalsIgnoreCase(role)) {
             httpResponse.sendRedirect(contextPath + "/login");
             return;
         }
 
-        if (normalizedPath.startsWith("/faculty") && !"FACULTY".equalsIgnoreCase(role)) {
-            System.out.println("[AuthFilter] Non-faculty accessing /faculty: " + role);
-            httpResponse.sendRedirect(contextPath + "/login");
-            return;
-        }
-
-        if (normalizedPath.startsWith("/student") && !"STUDENT".equalsIgnoreCase(role)) {
-            System.out.println("[AuthFilter] Non-student accessing /student: " + role);
-            httpResponse.sendRedirect(contextPath + "/login");
-            return;
-        }
-
-        // ── Step 4: Passed all checks → continue ──
         chain.doFilter(request, response);
     }
 
-    /**
-     * Check if the path is public (no login required).
-     * Supports exact matches and prefix matches (ending with /).
-     */
     private boolean isPublicPath(String path) {
-        if (path == null || path.isEmpty()) {
-            return true;
+        if (path == null || path.isEmpty()) return true;
+        if (PUBLIC_PATHS.contains(path)) return true;
+
+        for (String pp : PUBLIC_PATHS) {
+            if (pp.endsWith("/") && path.startsWith(pp)) return true;
         }
 
-        // Exact match
-        if (PUBLIC_PATHS.contains(path)) {
-            return true;
-        }
-
-        // Prefix match (for static resources like /css/, /js/, etc.)
-        for (String publicPath : PUBLIC_PATHS) {
-            if (publicPath.endsWith("/") && path.startsWith(publicPath)) {
-                return true;
-            }
-        }
-
-        // Allow common static file extensions anywhere
-        String lowerPath = path.toLowerCase();
-        if (lowerPath.endsWith(".css") || lowerPath.endsWith(".js") ||
-            lowerPath.endsWith(".png") || lowerPath.endsWith(".jpg") ||
-            lowerPath.endsWith(".jpeg") || lowerPath.endsWith(".gif") ||
-            lowerPath.endsWith(".svg") || lowerPath.endsWith(".ico") ||
-            lowerPath.endsWith(".woff") || lowerPath.endsWith(".woff2") ||
-            lowerPath.endsWith(".ttf") || lowerPath.endsWith(".eot") ||
-            lowerPath.endsWith(".map") || lowerPath.endsWith(".webp")) {
+        String lp = path.toLowerCase();
+        if (lp.endsWith(".css") || lp.endsWith(".js") ||
+            lp.endsWith(".png") || lp.endsWith(".jpg") || lp.endsWith(".jpeg") ||
+            lp.endsWith(".gif") || lp.endsWith(".svg") || lp.endsWith(".ico") ||
+            lp.endsWith(".woff") || lp.endsWith(".woff2") || lp.endsWith(".ttf") ||
+            lp.endsWith(".eot") || lp.endsWith(".map") || lp.endsWith(".webp")) {
             return true;
         }
 
         return false;
     }
 
-    /**
-     * Safely get the role string from whatever object is stored in session.
-     * Uses reflection so it works regardless of the exact User class structure.
-     */
     private String getUserRole(Object user) {
         if (user == null) return null;
         try {
-            java.lang.reflect.Method getRole = user.getClass().getMethod("getRole");
-            Object result = getRole.invoke(user);
-            return (result != null) ? result.toString() : null;
+            java.lang.reflect.Method m = user.getClass().getMethod("getRole");
+            Object r = m.invoke(user);
+            return (r != null) ? r.toString() : null;
         } catch (Exception e) {
-            System.err.println("[AuthFilter] Could not get role from user object: " + e.getMessage());
             return null;
         }
     }
 
     @Override
-    public void destroy() {
-        System.out.println("[AuthFilter] Destroyed");
-    }
+    public void destroy() {}
 }
