@@ -1,12 +1,12 @@
 package com.examportal.controller;
 
 import com.examportal.model.User;
-import com.examportal.util.SessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -17,7 +17,8 @@ public class FacultyDashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        User user = SessionUtil.getLoggedInUser(request);
+        HttpSession session = request.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("loggedInUser") : null;
 
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
