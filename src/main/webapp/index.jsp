@@ -31,10 +31,10 @@
                     <li class="nav-item"><a class="nav-link" href="#roles">Roles</a></li>
                     <li class="nav-item"><a class="nav-link" href="#testimonials">Testimonials</a></li>
                     <li class="nav-item ms-lg-3">
-                        <a href="login" class="btn btn-cyber-outline me-2">Login</a>
+                        <a href="${pageContext.request.contextPath}/login" class="btn btn-cyber-outline me-2">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a href="register" class="btn btn-cyber">Get Started</a>
+                        <a href="${pageContext.request.contextPath}/register" class="btn btn-cyber">Get Started</a>
                     </li>
                 </ul>
             </div>
@@ -59,7 +59,7 @@
                         modern educational institutions.
                     </p>
                     <div class="hero-actions mt-4">
-                        <a href="register" class="btn btn-cyber btn-lg me-3">
+                        <a href="${pageContext.request.contextPath}/register" class="btn btn-cyber btn-lg me-3">
                             <i class="fas fa-rocket me-2"></i>Start Free Trial
                         </a>
                         <a href="#features" class="btn btn-cyber-outline btn-lg">
@@ -314,8 +314,8 @@
             <div class="cta-content glass-card text-center" data-aos="zoom-in">
                 <h2 class="mb-3">Ready to Transform Your <span class="gradient-text">Assessments?</span></h2>
                 <p class="mb-4">Join thousands of institutions using ExamPortal for seamless examination management</p>
-                <a href="register" class="btn btn-cyber btn-lg me-3"><i class="fas fa-user-plus me-2"></i>Get Started Now</a>
-                <a href="login" class="btn btn-cyber-outline btn-lg"><i class="fas fa-sign-in-alt me-2"></i>Login</a>
+                <a href="${pageContext.request.contextPath}/register" class="btn btn-cyber btn-lg me-3"><i class="fas fa-user-plus me-2"></i>Get Started Now</a>
+                <a href="${pageContext.request.contextPath}/login" class="btn btn-cyber-outline btn-lg"><i class="fas fa-sign-in-alt me-2"></i>Login</a>
             </div>
         </div>
     </section>
@@ -340,7 +340,7 @@
                         <li><a href="#features">Features</a></li>
                         <li><a href="#workflow">Workflow</a></li>
                         <li><a href="#roles">Roles</a></li>
-                        <li><a href="register">Get Started</a></li>
+                        <li><a href="${pageContext.request.contextPath}/register">Get Started</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-md-6">
