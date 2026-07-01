@@ -12,6 +12,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Register servlet handles user registration for students and faculty
+ */
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
@@ -60,7 +63,6 @@ public class RegisterServlet extends HttpServlet {
                 rollNumber, course, branch, semester, year,
                 employeeId, department, designation, specialization);
 
-            // Guard: registration returned null
             if (user == null) {
                 request.setAttribute("error", "Registration failed — no user record created. Please try again.");
                 preserveFormData(request, email, fullName, role, phone, rollNumber, course,
@@ -69,14 +71,11 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
 
-            // Create session BEFORE redirect
             SessionUtil.createUserSession(request, user);
-
-            // Normalize role to avoid case-sensitivity bugs
             String normalizedRole = user.getRole().toUpperCase().trim();
             String contextPath = request.getContextPath();
 
-            System.out.println("[RegisterServlet] User registered: " + email + " | Role: " + normalizedRole + " | Redirecting...");
+            System.out.println("[RegisterServlet] User registered: " + email + " | Role: " + normalizedRole);
 
             switch (normalizedRole) {
                 case "FACULTY":
@@ -86,7 +85,7 @@ public class RegisterServlet extends HttpServlet {
                     response.sendRedirect(contextPath + "/student/dashboard");
                     break;
                 default:
-                    System.err.println("[RegisterServlet] Unknown role '" + user.getRole() + "' — falling back to login");
+                    System.err.println("[RegisterServlet] Unknown role: " + normalizedRole);
                     response.sendRedirect(contextPath + "/login");
             }
 

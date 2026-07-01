@@ -1,19 +1,27 @@
 package com.examportal.controller;
 
-import com.examportal.util.SessionUtil;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
+/**
+ * Logout servlet — invalidates session and redirects to home
+ */
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-            throws IOException {
-        SessionUtil.destroySession(request);
-        response.sendRedirect(request.getContextPath() + "/login");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        response.sendRedirect(request.getContextPath() + "/");
     }
 }

@@ -10,6 +10,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
+/**
+ * Student dashboard servlet — restricted to STUDENT role
+ */
 @WebServlet("/student/dashboard")
 public class StudentDashboardServlet extends HttpServlet {
 
@@ -35,14 +38,11 @@ public class StudentDashboardServlet extends HttpServlet {
         request.setAttribute("email", user.getEmail());
 
         try {
-            request.getRequestDispatcher("/WEB-INF/views/student/dashboard.jsp").forward(request, response);
+            request.getRequestDispatcher("/student/dashboard.jsp").forward(request, response);
         } catch (Exception e) {
-            try {
-                request.getRequestDispatcher("/student/dashboard.jsp").forward(request, response);
-            } catch (Exception e2) {
-                System.err.println("[StudentDashboardServlet] Cannot find dashboard.jsp: " + e2.getMessage());
-                response.sendError(404, "Dashboard page not found. Check JSP path in StudentDashboardServlet.");
-            }
+            System.err.println("[StudentDashboardServlet] Error loading dashboard: " + e.getMessage());
+            e.printStackTrace();
+            response.sendError(500, "Error loading student dashboard.");
         }
     }
 }

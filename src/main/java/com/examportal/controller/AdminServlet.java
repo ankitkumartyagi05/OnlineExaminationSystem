@@ -18,6 +18,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Admin servlet for admin//* paths — handles analytics, reports, user management
+ */
 @WebServlet("/admin/*")
 public class AdminServlet extends HttpServlet {
 
@@ -41,7 +44,7 @@ public class AdminServlet extends HttpServlet {
         if (pathInfo == null) pathInfo = "/dashboard";
 
         switch (pathInfo) {
-            case "/dashboard" -> showDashboard(request, response);
+            case "/dashboard" -> response.sendRedirect(request.getContextPath() + "/admin/dashboard");
             case "/users" -> showUserManagement(request, response);
             case "/analytics" -> showAnalytics(request, response);
             case "/reports" -> showReports(request, response);
@@ -64,26 +67,6 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
-    private void showDashboard(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        try {
-            request.setAttribute("studentCount", studentDAO.countAllStudents());
-            request.setAttribute("facultyCount", facultyDAO.countAllFaculty());
-            request.setAttribute("examCount", examDAO.countAllExams());
-            request.setAttribute("questionCount", questionDAO.countAllQuestions());
-            request.setAttribute("attemptCount", resultDAO.countTotalAttempts());
-            request.setAttribute("passedCount", resultDAO.countPassedStudents());
-            java.util.List<User> users = userDAO.findAllUsers();
-            request.setAttribute("recentUsers", users.subList(0, Math.min(5, users.size())));
-            request.getRequestDispatcher("/admin/dashboard.jsp").forward(request, response);
-        } catch (SQLException e) {
-            System.err.println("Database error in AdminServlet.showDashboard: " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("error", "An internal database error occurred. Please contact the administrator.");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
-        }
-    }
-
     private void showUserManagement(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
@@ -94,8 +77,8 @@ public class AdminServlet extends HttpServlet {
         } catch (SQLException e) {
             System.err.println("Database error in AdminServlet.showUserManagement: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "An internal database error occurred. Please contact the administrator.");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            request.setAttribute("error", "An internal database error occurred.");
+            response.sendError(500, "Database error.");
         }
     }
 
@@ -109,8 +92,8 @@ public class AdminServlet extends HttpServlet {
         } catch (SQLException e) {
             System.err.println("Database error in AdminServlet.showAnalytics: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "An internal database error occurred. Please contact the administrator.");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            request.setAttribute("error", "An internal database error occurred.");
+            response.sendError(500, "Database error.");
         }
     }
 
@@ -124,8 +107,8 @@ public class AdminServlet extends HttpServlet {
         } catch (SQLException e) {
             System.err.println("Database error in AdminServlet.showReports: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "An internal database error occurred. Please contact the administrator.");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            request.setAttribute("error", "An internal database error occurred.");
+            response.sendError(500, "Database error.");
         }
     }
 
@@ -142,7 +125,7 @@ public class AdminServlet extends HttpServlet {
         } catch (SQLException e) {
             System.err.println("Database error in AdminServlet.toggleUserStatus: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "An internal database error occurred. Please contact the administrator.");
+            request.setAttribute("error", "An internal database error occurred.");
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Invalid user ID format.");
         }

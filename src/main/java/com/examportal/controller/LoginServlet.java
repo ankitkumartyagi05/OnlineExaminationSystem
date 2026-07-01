@@ -12,6 +12,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Login servlet handles authentication and redirects to appropriate dashboard
+ */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
@@ -54,18 +57,26 @@ public class LoginServlet extends HttpServlet {
             throws IOException {
         User user = SessionUtil.getCurrentUser(request);
         String contextPath = request.getContextPath();
-        switch (user.getRole()) {
-            case "ADMIN":
-                response.sendRedirect(contextPath + "/admin/dashboard");
-                break;
-            case "FACULTY":
-                response.sendRedirect(contextPath + "/faculty/dashboard");
-                break;
-            case "STUDENT":
-                response.sendRedirect(contextPath + "/student/dashboard");
-                break;
-            default:
-                response.sendRedirect(contextPath + "/login");
+        String role = (user != null) ? user.getRole() : null;
+        
+        if (role != null) {
+            switch (role.toUpperCase()) {
+                case "ADMIN":
+                    response.sendRedirect(contextPath + "/admin/dashboard");
+                    break;
+                case "FACULTY":
+                    response.sendRedirect(contextPath + "/faculty/dashboard");
+                    break;
+                case "STUDENT":
+                    response.sendRedirect(contextPath + "/student/dashboard");
+                    break;
+                default:
+                    System.err.println("Unknown role: " + role);
+                    response.sendRedirect(contextPath + "/login");
+            }
+        } else {
+            System.err.println("User is null after login");
+            response.sendRedirect(contextPath + "/login");
         }
     }
 }

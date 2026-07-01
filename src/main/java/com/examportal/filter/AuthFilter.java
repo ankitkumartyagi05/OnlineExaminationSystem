@@ -9,7 +9,10 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-// ── REMOVED @WebFilter("/*") — web.xml already maps this filter ──
+/**
+ * Authentication filter — enforces role-based access control
+ * Maps in web.xml, not annotated with @WebFilter
+ */
 public class AuthFilter implements Filter {
 
     private static final Set<String> PUBLIC_PATHS = new HashSet<>();
@@ -22,7 +25,9 @@ public class AuthFilter implements Filter {
         PUBLIC_PATHS.add("/login.jsp");
         PUBLIC_PATHS.add("/register.jsp");
         PUBLIC_PATHS.add("/error404.jsp");
+        PUBLIC_PATHS.add("/error.jsp");
         PUBLIC_PATHS.add("/error500.jsp");
+        PUBLIC_PATHS.add("/logout");
         PUBLIC_PATHS.add("/css/");
         PUBLIC_PATHS.add("/js/");
         PUBLIC_PATHS.add("/images/");
@@ -62,7 +67,7 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        // Role-based access
+        // Role-based access control
         String role = getUserRole(user);
         String lowerPath = path.toLowerCase();
 
