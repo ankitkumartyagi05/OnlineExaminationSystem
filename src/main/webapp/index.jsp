@@ -10,26 +10,32 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <style>
+        body { overflow-x: hidden; }
+        .cyber-nav { background: rgba(10, 25, 47, 0.95) !important; box-shadow: 0 2px 10px rgba(0, 255, 255, 0.1); }
+        .btn-cyber { background: linear-gradient(135deg, #00d4ff, #0099ff); border: none; color: white; font-weight: 600; }
+        .btn-cyber:hover { background: linear-gradient(135deg, #00b8e6, #0080dd); color: white; }
+        .btn-cyber-outline { border: 2px solid #00d4ff; color: #00d4ff; background: transparent; }
+        .btn-cyber-outline:hover { background: rgba(0, 212, 255, 0.1); color: #00d4ff; }
+        .gradient-text { background: linear-gradient(135deg, #00d4ff, #0099ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .glass-card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 20px; }
+    </style>
 </head>
-<body>
-    <!-- Three.js Background Canvas -->
-    <canvas id="bg-canvas"></canvas>
-
+<body style="background: linear-gradient(135deg, #0a1930 0%, #1a2a4a 100%); color: #e0e0e0; font-family: 'Inter', sans-serif;">
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg fixed-top cyber-nav" id="mainNav">
+    <nav class="navbar navbar-expand-lg fixed-top cyber-nav">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-graduation-cap me-2"></i>Exam<span>Portal</span>
+            <a class="navbar-brand" href="#" style="color: #00d4ff; font-weight: 700; font-size: 24px;">
+                <i class="fas fa-graduation-cap me-2"></i>Exam<span style="color: #ffffff;">Portal</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
-                <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" style="border-color: #00d4ff;">
+                <span class="navbar-toggler-icon" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 30%22><path stroke=%2200d4ff%22 stroke-linecap=%22round%22 stroke-miterlimit=%2210%22 stroke-width=%222%22 d=%22M4 7h22M4 15h22M4 23h22%22/></svg>');"></span>
             </button>
             <div class="collapse navbar-collapse" id="navContent">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#workflow">Workflow</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#roles">Roles</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#testimonials">Testimonials</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#features" style="color: #e0e0e0;">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#workflow" style="color: #e0e0e0;">Workflow</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#roles" style="color: #e0e0e0;">Roles</a></li>
                     <li class="nav-item ms-lg-3">
                         <a href="${pageContext.request.contextPath}/login" class="btn btn-cyber-outline me-2">Login</a>
                     </li>
@@ -42,73 +48,36 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section" id="hero">
+    <section style="min-height: 100vh; display: flex; align-items: center; padding-top: 80px;">
         <div class="container">
-            <div class="row align-items-center min-vh-100">
-                <div class="col-lg-7" data-aos="fade-right">
-                    <div class="hero-badge mb-4">
-                        <i class="fas fa-bolt"></i> Enterprise-Grade Assessment Platform
+            <div class="row align-items-center">
+                <div class="col-lg-7 mb-5 mb-lg-0">
+                    <div class="glass-card mb-4" style="width: fit-content;">
+                        <i class="fas fa-bolt" style="color: #00d4ff;"></i> Enterprise-Grade Assessment Platform
                     </div>
-                    <h1 class="hero-title">
+                    <h1 style="font-size: 3.5rem; font-weight: 900; line-height: 1.2; margin-bottom: 20px;">
                         Next-Gen <span class="gradient-text">Online Examination</span> 
                         & Assessment System
                     </h1>
-                    <p class="hero-subtitle">
-                        Transform your assessment process with AI-powered analytics, 
-                        real-time monitoring, and enterprise-grade security. Built for 
-                        modern educational institutions.
+                    <p style="font-size: 1.2rem; color: #b0b0b0; margin-bottom: 30px;">
+                        Transform your assessment process with enterprise-grade security, real-time monitoring, and powerful analytics. Built for modern educational institutions.
                     </p>
-                    <div class="hero-actions mt-4">
-                        <a href="${pageContext.request.contextPath}/register" class="btn btn-cyber btn-lg me-3">
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <a href="${pageContext.request.contextPath}/register" class="btn btn-cyber btn-lg">
                             <i class="fas fa-rocket me-2"></i>Start Free Trial
                         </a>
                         <a href="#features" class="btn btn-cyber-outline btn-lg">
                             <i class="fas fa-play-circle me-2"></i>Explore Features
                         </a>
                     </div>
-                    <div class="hero-stats mt-5">
-                        <div class="stat-item">
-                            <h3 class="stat-number" data-target="50000">0</h3>
-                            <p>Students Assessed</p>
-                        </div>
-                        <div class="stat-item">
-                            <h3 class="stat-number" data-target="500">0</h3>
-                            <p>Institutions</p>
-                        </div>
-                        <div class="stat-item">
-                            <h3 class="stat-number" data-target="100000">0</h3>
-                            <p>Exams Conducted</p>
-                        </div>
-                        <div class="stat-item">
-                            <h3 class="stat-number" data-target="99" data-suffix="%">0</h3>
-                            <p>Uptime</p>
-                        </div>
-                    </div>
                 </div>
-                <div class="col-lg-5" data-aos="fade-left">
-                    <div class="hero-visual">
-                        <div class="floating-card card-1">
-                            <i class="fas fa-clock text-cyan"></i>
-                            <div>
-                                <h6>Timer Active</h6>
-                                <p>29:45 remaining</p>
-                            </div>
+                <div class="col-lg-5">
+                    <div style="background: rgba(0, 212, 255, 0.1); border-radius: 20px; padding: 40px; border: 2px solid rgba(0, 212, 255, 0.2);">
+                        <div style="text-align: center;">
+                            <i class="fas fa-chart-line" style="font-size: 4rem; color: #00d4ff; margin-bottom: 20px;"></i>
+                            <h3 style="color: #00d4ff; margin-bottom: 10px;">Enterprise Platform</h3>
+                            <p style="color: #b0b0b0;">Secure, Scalable, and Ready for Production</p>
                         </div>
-                        <div class="floating-card card-2">
-                            <i class="fas fa-check-circle text-success"></i>
-                            <div>
-                                <h6>Auto-Graded</h6>
-                                <p>Instant results</p>
-                            </div>
-                        </div>
-                        <div class="floating-card card-3">
-                            <i class="fas fa-chart-line text-purple"></i>
-                            <div>
-                                <h6>Analytics</h6>
-                                <p>Real-time insights</p>
-                            </div>
-                        </div>
-                        <div class="hero-orb"></div>
                     </div>
                 </div>
             </div>
@@ -116,100 +85,53 @@
     </section>
 
     <!-- Features Section -->
-    <section class="features-section py-5" id="features">
-        <div class="container py-5">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">Powerful <span class="gradient-text">Features</span></h2>
-                <p class="section-subtitle">Everything you need for seamless examination management</p>
+    <section id="features" style="padding: 80px 0; background: rgba(26, 42, 74, 0.5);">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 15px;">Powerful <span class="gradient-text">Features</span></h2>
+                <p style="color: #b0b0b0; font-size: 1.1rem;">Everything you need for seamless examination management</p>
             </div>
             <div class="row g-4">
-                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
-                    <div class="feature-card glass-card">
-                        <div class="feature-icon"><i class="fas fa-question-circle"></i></div>
-                        <h4>Smart Question Bank</h4>
-                        <p>Create, categorize, and manage thousands of MCQ questions with difficulty levels and negative marking support.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="glass-card" style="text-align: center; height: 100%;">
+                        <div style="font-size: 3rem; color: #00d4ff; margin-bottom: 15px;"><i class="fas fa-question-circle"></i></div>
+                        <h4 style="color: #ffffff; margin-bottom: 10px;">Smart Question Bank</h4>
+                        <p style="color: #b0b0b0;">Create and manage thousands of MCQ questions with difficulty levels and negative marking.</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-card glass-card">
-                        <div class="feature-icon"><i class="fas fa-stopwatch"></i></div>
-                        <h4>Timer-Based Exams</h4>
-                        <p>Auto-submit exams with configurable timers. Support for random question selection and question navigation.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="glass-card" style="text-align: center; height: 100%;">
+                        <div style="font-size: 3rem; color: #00d4ff; margin-bottom: 15px;"><i class="fas fa-stopwatch"></i></div>
+                        <h4 style="color: #ffffff; margin-bottom: 10px;">Timer-Based Exams</h4>
+                        <p style="color: #b0b0b0;">Auto-submit exams with configurable timers and random question selection.</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-card glass-card">
-                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-                        <h4>Instant Evaluation</h4>
-                        <p>Automated grading with instant results, detailed answer analysis, and performance analytics.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="glass-card" style="text-align: center; height: 100%;">
+                        <div style="font-size: 3rem; color: #00d4ff; margin-bottom: 15px;"><i class="fas fa-bolt"></i></div>
+                        <h4 style="color: #ffffff; margin-bottom: 10px;">Instant Evaluation</h4>
+                        <p style="color: #b0b0b0;">Automated grading with instant results and detailed performance analytics.</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
-                    <div class="feature-card glass-card">
-                        <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
-                        <h4>Advanced Analytics</h4>
-                        <p>Subject-wise performance, student rankings, pass rates, and comprehensive dashboards for all roles.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="glass-card" style="text-align: center; height: 100%;">
+                        <div style="font-size: 3rem; color: #00d4ff; margin-bottom: 15px;"><i class="fas fa-chart-pie"></i></div>
+                        <h4 style="color: #ffffff; margin-bottom: 10px;">Advanced Analytics</h4>
+                        <p style="color: #b0b0b0;">Subject-wise performance tracking and comprehensive dashboards for all roles.</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
-                    <div class="feature-card glass-card">
-                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                        <h4>Enterprise Security</h4>
-                        <p>BCrypt password hashing, role-based access control, SQL injection prevention, and session management.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="glass-card" style="text-align: center; height: 100%;">
+                        <div style="font-size: 3rem; color: #00d4ff; margin-bottom: 15px;"><i class="fas fa-shield-alt"></i></div>
+                        <h4 style="color: #ffffff; margin-bottom: 10px;">Enterprise Security</h4>
+                        <p style="color: #b0b0b0;">BCrypt hashing, RBAC, SQL injection prevention, and session management.</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
-                    <div class="feature-card glass-card">
-                        <div class="feature-icon"><i class="fas fa-users-cog"></i></div>
-                        <h4>Multi-Role System</h4>
-                        <p>Dedicated interfaces for Admins, Faculty, and Students with role-specific features and permissions.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Workflow Timeline -->
-    <section class="workflow-section py-5" id="workflow">
-        <div class="container py-5">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">How It <span class="gradient-text">Works</span></h2>
-                <p class="section-subtitle">A streamlined workflow from creation to results</p>
-            </div>
-            <div class="timeline">
-                <div class="timeline-item" data-aos="fade-right">
-                    <div class="timeline-dot"><i class="fas fa-user-plus"></i></div>
-                    <div class="timeline-content glass-card">
-                        <h4>Register & Login</h4>
-                        <p>Admins, Faculty, and Students register with role-specific profiles and secure authentication.</p>
-                    </div>
-                </div>
-                <div class="timeline-item" data-aos="fade-left">
-                    <div class="timeline-dot"><i class="fas fa-edit"></i></div>
-                    <div class="timeline-content glass-card">
-                        <h4>Create Question Bank</h4>
-                        <p>Faculty builds a comprehensive question bank categorized by subject, difficulty, and marks.</p>
-                    </div>
-                </div>
-                <div class="timeline-item" data-aos="fade-right">
-                    <div class="timeline-dot"><i class="fas fa-file-alt"></i></div>
-                    <div class="timeline-content glass-card">
-                        <h4>Schedule Exams</h4>
-                        <p>Create exams with configurable timers, negative marking, randomization, and pass criteria.</p>
-                    </div>
-                </div>
-                <div class="timeline-item" data-aos="fade-left">
-                    <div class="timeline-dot"><i class="fas fa-desktop"></i></div>
-                    <div class="timeline-content glass-card">
-                        <h4>Take Exam</h4>
-                        <p>Students attempt exams with real-time timers, question navigation, and auto-submit on timeout.</p>
-                    </div>
-                </div>
-                <div class="timeline-item" data-aos="fade-right">
-                    <div class="timeline-dot"><i class="fas fa-poll"></i></div>
-                    <div class="timeline-content glass-card">
-                        <h4>Instant Results & Analytics</h4>
-                        <p>Automated evaluation generates instant results with detailed analytics and downloadable reports.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="glass-card" style="text-align: center; height: 100%;">
+                        <div style="font-size: 3rem; color: #00d4ff; margin-bottom: 15px;"><i class="fas fa-users-cog"></i></div>
+                        <h4 style="color: #ffffff; margin-bottom: 10px;">Multi-Role System</h4>
+                        <p style="color: #b0b0b0;">Dedicated interfaces for Admins, Faculty, and Students with role-specific features.</p>
                     </div>
                 </div>
             </div>
@@ -217,91 +139,50 @@
     </section>
 
     <!-- Roles Section -->
-    <section class="roles-section py-5" id="roles">
-        <div class="container py-5">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">Built for <span class="gradient-text">Everyone</span></h2>
-                <p class="section-subtitle">Tailored experiences for each role</p>
+    <section id="roles" style="padding: 80px 0;">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 15px;">Built for <span class="gradient-text">Everyone</span></h2>
+                <p style="color: #b0b0b0; font-size: 1.1rem;">Tailored experiences for each role</p>
             </div>
             <div class="row g-4">
-                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="0">
-                    <div class="role-card glass-card text-center">
-                        <div class="role-icon admin-icon"><i class="fas fa-user-shield"></i></div>
-                        <h4>Administrator</h4>
-                        <p>Full system control with user management, analytics dashboards, system reports, and activity logs.</p>
-                        <ul class="role-features">
-                            <li><i class="fas fa-check"></i> User Management</li>
-                            <li><i class="fas fa-check"></i> System Analytics</li>
-                            <li><i class="fas fa-check"></i> Activity Monitoring</li>
-                            <li><i class="fas fa-check"></i> Report Generation</li>
+                <div class="col-md-4">
+                    <div class="glass-card" style="text-align: center; height: 100%;">
+                        <div style="font-size: 3rem; color: #ff6b6b; margin-bottom: 15px;"><i class="fas fa-user-shield"></i></div>
+                        <h4 style="color: #ffffff; margin-bottom: 15px;">Administrator</h4>
+                        <p style="color: #b0b0b0; margin-bottom: 15px;">Full system control with user management, analytics dashboards, and activity logs.</p>
+                        <ul style="list-style: none; padding: 0; text-align: left;">
+                            <li style="color: #00d4ff; margin-bottom: 8px;"><i class="fas fa-check me-2"></i> User Management</li>
+                            <li style="color: #00d4ff; margin-bottom: 8px;"><i class="fas fa-check me-2"></i> System Analytics</li>
+                            <li style="color: #00d4ff; margin-bottom: 8px;"><i class="fas fa-check me-2"></i> Activity Monitoring</li>
+                            <li style="color: #00d4ff;"><i class="fas fa-check me-2"></i> Report Generation</li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="role-card glass-card text-center">
-                        <div class="role-icon faculty-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-                        <h4>Faculty</h4>
-                        <p>Create exams, manage question banks, schedule tests, and track student performance with analytics.</p>
-                        <ul class="role-features">
-                            <li><i class="fas fa-check"></i> Create & Schedule Exams</li>
-                            <li><i class="fas fa-check"></i> Question Bank Management</li>
-                            <li><i class="fas fa-check"></i> Student Performance</li>
-                            <li><i class="fas fa-check"></i> Faculty Reports</li>
+                <div class="col-md-4">
+                    <div class="glass-card" style="text-align: center; height: 100%;">
+                        <div style="font-size: 3rem; color: #51cf66; margin-bottom: 15px;"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <h4 style="color: #ffffff; margin-bottom: 15px;">Faculty</h4>
+                        <p style="color: #b0b0b0; margin-bottom: 15px;">Create exams, manage question banks, schedule tests, and track student performance.</p>
+                        <ul style="list-style: none; padding: 0; text-align: left;">
+                            <li style="color: #00d4ff; margin-bottom: 8px;"><i class="fas fa-check me-2"></i> Create & Schedule Exams</li>
+                            <li style="color: #00d4ff; margin-bottom: 8px;"><i class="fas fa-check me-2"></i> Question Bank Mgmt</li>
+                            <li style="color: #00d4ff; margin-bottom: 8px;"><i class="fas fa-check me-2"></i> Student Performance</li>
+                            <li style="color: #00d4ff;"><i class="fas fa-check me-2"></i> Faculty Reports</li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="role-card glass-card text-center">
-                        <div class="role-icon student-icon"><i class="fas fa-user-graduate"></i></div>
-                        <h4>Student</h4>
-                        <p>Take timed exams, view instant results, track performance analytics, and download reports.</p>
-                        <ul class="role-features">
-                            <li><i class="fas fa-check"></i> Take Online Exams</li>
-                            <li><i class="fas fa-check"></i> Instant Results</li>
-                            <li><i class="fas fa-check"></i> Performance Analytics</li>
-                            <li><i class="fas fa-check"></i> Download Reports</li>
+                <div class="col-md-4">
+                    <div class="glass-card" style="text-align: center; height: 100%;">
+                        <div style="font-size: 3rem; color: #ffd43b; margin-bottom: 15px;"><i class="fas fa-user-graduate"></i></div>
+                        <h4 style="color: #ffffff; margin-bottom: 15px;">Student</h4>
+                        <p style="color: #b0b0b0; margin-bottom: 15px;">Take timed exams, view instant results, track performance analytics, and download reports.</p>
+                        <ul style="list-style: none; padding: 0; text-align: left;">
+                            <li style="color: #00d4ff; margin-bottom: 8px;"><i class="fas fa-check me-2"></i> Take Online Exams</li>
+                            <li style="color: #00d4ff; margin-bottom: 8px;"><i class="fas fa-check me-2"></i> Instant Results</li>
+                            <li style="color: #00d4ff; margin-bottom: 8px;"><i class="fas fa-check me-2"></i> Performance Analytics</li>
+                            <li style="color: #00d4ff;"><i class="fas fa-check me-2"></i> Download Reports</li>
                         </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="testimonials-section py-5" id="testimonials">
-        <div class="container py-5">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">What Our <span class="gradient-text">Users Say</span></h2>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
-                    <div class="testimonial-card glass-card">
-                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p>"ExamPortal has revolutionized our assessment process. The instant evaluation and analytics save us countless hours every semester."</p>
-                        <div class="testimonial-author">
-                            <div class="author-avatar">DK</div>
-                            <div><h6>Dr. Kumar Reddy</h6><small>Dean of Engineering</small></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="testimonial-card glass-card">
-                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p>"The question bank feature is incredibly powerful. I can create and manage hundreds of questions with ease and randomize them for each exam."</p>
-                        <div class="testimonial-author">
-                            <div class="author-avatar">PS</div>
-                            <div><h6>Prof. Priya Sharma</h6><small>Computer Science Faculty</small></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="testimonial-card glass-card">
-                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p>"The exam interface is clean and intuitive. The timer and question navigation make taking online exams stress-free and efficient."</p>
-                        <div class="testimonial-author">
-                            <div class="author-avatar">JD</div>
-                            <div><h6>John Doe</h6><small>Final Year Student</small></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -309,73 +190,60 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="cta-section py-5">
-        <div class="container py-5">
-            <div class="cta-content glass-card text-center" data-aos="zoom-in">
-                <h2 class="mb-3">Ready to Transform Your <span class="gradient-text">Assessments?</span></h2>
-                <p class="mb-4">Join thousands of institutions using ExamPortal for seamless examination management</p>
-                <a href="${pageContext.request.contextPath}/register" class="btn btn-cyber btn-lg me-3"><i class="fas fa-user-plus me-2"></i>Get Started Now</a>
-                <a href="${pageContext.request.contextPath}/login" class="btn btn-cyber-outline btn-lg"><i class="fas fa-sign-in-alt me-2"></i>Login</a>
+    <section style="padding: 60px 0; background: rgba(0, 212, 255, 0.05); border-top: 2px solid rgba(0, 212, 255, 0.2); border-bottom: 2px solid rgba(0, 212, 255, 0.2);">
+        <div class="container">
+            <div class="glass-card text-center" style="padding: 50px;">
+                <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 15px;">Ready to Transform Your <span class="gradient-text">Assessments?</span></h2>
+                <p style="color: #b0b0b0; font-size: 1.1rem; margin-bottom: 30px;">Join thousands of institutions using ExamPortal for seamless examination management</p>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <a href="${pageContext.request.contextPath}/register" class="btn btn-cyber btn-lg"><i class="fas fa-user-plus me-2"></i>Get Started Now</a>
+                    <a href="${pageContext.request.contextPath}/login" class="btn btn-cyber-outline btn-lg"><i class="fas fa-sign-in-alt me-2"></i>Login</a>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="cyber-footer py-5">
+    <footer style="background: rgba(10, 25, 47, 0.95); padding: 50px 0; border-top: 1px solid rgba(0, 212, 255, 0.1);">
         <div class="container">
-            <div class="row g-4">
+            <div class="row g-4 mb-4">
                 <div class="col-lg-4">
-                    <h5 class="footer-brand"><i class="fas fa-graduation-cap me-2"></i>ExamPortal</h5>
-                    <p>Enterprise-grade online examination and assessment management system built for modern educational institutions.</p>
-                    <div class="social-links mt-3">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
+                    <h5 style="color: #00d4ff; font-weight: 700; margin-bottom: 15px;"><i class="fas fa-graduation-cap me-2"></i>ExamPortal</h5>
+                    <p style="color: #b0b0b0;">Enterprise-grade online examination and assessment management system built for modern educational institutions.</p>
                 </div>
                 <div class="col-lg-2 col-md-6">
-                    <h6>Product</h6>
-                    <ul class="footer-links">
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#workflow">Workflow</a></li>
-                        <li><a href="#roles">Roles</a></li>
-                        <li><a href="${pageContext.request.contextPath}/register">Get Started</a></li>
+                    <h6 style="color: #ffffff; font-weight: 700; margin-bottom: 15px;">Product</h6>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><a href="#features" style="color: #b0b0b0; text-decoration: none;">Features</a></li>
+                        <li><a href="#roles" style="color: #b0b0b0; text-decoration: none;">Roles</a></li>
+                        <li><a href="${pageContext.request.contextPath}/register" style="color: #b0b0b0; text-decoration: none;">Get Started</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-md-6">
-                    <h6>Resources</h6>
-                    <ul class="footer-links">
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">API Reference</a></li>
-                        <li><a href="#">Support</a></li>
-                        <li><a href="#">FAQ</a></li>
+                    <h6 style="color: #ffffff; font-weight: 700; margin-bottom: 15px;">Resources</h6>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><a href="#" style="color: #b0b0b0; text-decoration: none;">Documentation</a></li>
+                        <li><a href="#" style="color: #b0b0b0; text-decoration: none;">Support</a></li>
+                        <li><a href="#" style="color: #b0b0b0; text-decoration: none;">FAQ</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-4">
-                    <h6>Stay Updated</h6>
-                    <p>Subscribe for the latest updates and features</p>
-                    <div class="newsletter-form">
-                        <input type="email" placeholder="Enter your email" class="form-control">
-                        <button class="btn btn-cyber mt-2 w-100">Subscribe</button>
-                    </div>
+                    <h6 style="color: #ffffff; font-weight: 700; margin-bottom: 15px;">Stay Connected</h6>
+                    <p style="color: #b0b0b0;">Follow us on social media for updates and announcements</p>
                 </div>
             </div>
-            <hr class="footer-divider">
-            <div class="text-center">
-                <p class="mb-0">&copy; 2025 ExamPortal. All rights reserved. Built with <i class="fas fa-heart text-danger"></i> by L&T College Connect</p>
+            <hr style="border-color: rgba(0, 212, 255, 0.1);">
+            <div style="text-align: center; color: #b0b0b0; padding-top: 20px;">
+                <p style="margin: 0;">&copy; 2025 ExamPortal. All rights reserved. Built with <i class="fas fa-heart" style="color: #ff6b6b;"></i> for Education</p>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="js/three-bg.js"></script>
-    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('ExamPortal loaded successfully at: ' + window.location.href);
+        });
+    </script>
 </body>
 </html>

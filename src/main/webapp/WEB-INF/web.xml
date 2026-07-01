@@ -7,6 +7,7 @@
 
     <display-name>ExamPortal</display-name>
 
+    <!-- Primary welcome file configuration -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
@@ -32,16 +33,18 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- Explicit Servlet Mappings (annotations in code are primary) -->
+    <!-- Root Servlet -->
     <servlet>
         <servlet-name>RootServlet</servlet-name>
         <servlet-class>com.examportal.controller.RootServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>RootServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <!-- Login Servlet -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>com.examportal.controller.LoginServlet</servlet-class>
@@ -51,6 +54,7 @@
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
 
+    <!-- Register Servlet -->
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>com.examportal.controller.RegisterServlet</servlet-class>
@@ -60,6 +64,7 @@
         <url-pattern>/register</url-pattern>
     </servlet-mapping>
 
+    <!-- Student Dashboard Servlet -->
     <servlet>
         <servlet-name>StudentDashboardServlet</servlet-name>
         <servlet-class>com.examportal.controller.StudentDashboardServlet</servlet-class>
@@ -69,6 +74,7 @@
         <url-pattern>/student/dashboard</url-pattern>
     </servlet-mapping>
 
+    <!-- Faculty Dashboard Servlet -->
     <servlet>
         <servlet-name>FacultyDashboardServlet</servlet-name>
         <servlet-class>com.examportal.controller.FacultyDashboardServlet</servlet-class>
@@ -78,6 +84,7 @@
         <url-pattern>/faculty/dashboard</url-pattern>
     </servlet-mapping>
 
+    <!-- Admin Dashboard Servlet -->
     <servlet>
         <servlet-name>AdminDashboardServlet</servlet-name>
         <servlet-class>com.examportal.controller.AdminDashboardServlet</servlet-class>
@@ -87,6 +94,7 @@
         <url-pattern>/admin/dashboard</url-pattern>
     </servlet-mapping>
 
+    <!-- Logout Servlet -->
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>com.examportal.controller.LogoutServlet</servlet-class>

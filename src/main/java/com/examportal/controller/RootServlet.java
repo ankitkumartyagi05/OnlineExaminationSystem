@@ -9,8 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Root servlet that serves index.jsp at the root URL /
- * This ensures the landing page loads directly without context path issues.
+ * Root servlet that redirects to index.jsp
+ * Ensures landing page loads directly at root URL
  */
 @WebServlet("/")
 public class RootServlet extends HttpServlet {
@@ -18,7 +18,7 @@ public class RootServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Forward to index.jsp — context path is automatically handled
-        request.getRequestDispatcher("/index.jsp").forward(request, response);
+        // Redirect to index.jsp - faster than forward
+        response.sendRedirect(request.getContextPath() + "/index.jsp");
     }
 }
