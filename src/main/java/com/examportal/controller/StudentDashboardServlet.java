@@ -1,12 +1,12 @@
 package com.examportal.controller;
 
 import com.examportal.model.User;
-import com.examportal.util.SessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -17,9 +17,9 @@ public class StudentDashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        User user = SessionUtil.getLoggedInUser(request);
+        HttpSession session = request.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("loggedInUser") : null;
 
-        // ── Not logged in or wrong role → kick to login ──
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
@@ -34,15 +34,9 @@ public class StudentDashboardServlet extends HttpServlet {
         request.setAttribute("fullName", user.getFullName());
         request.setAttribute("email", user.getEmail());
 
-        // ── Adjust this path to wherever your dashboard.jsp actually lives ──
-        // Common locations:
-        //   Option A: request.getRequestDispatcher("/WEB-INF/views/student/dashboard.jsp")
-        //   Option B: request.getRequestDispatcher("/student/dashboard.jsp")
-        //   Option C: request.getRequestDispatcher("/dashboard.jsp")
         try {
             request.getRequestDispatcher("/WEB-INF/views/student/dashboard.jsp").forward(request, response);
         } catch (Exception e) {
-            // Fallback: try webapp root
             try {
                 request.getRequestDispatcher("/student/dashboard.jsp").forward(request, response);
             } catch (Exception e2) {
