@@ -25,18 +25,18 @@ public class CandidateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getPathInfo();
         if (path == null || "/".equals(path)) {
-            req.getRequestDispatcher("/candidate/register.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/candidate/register.jsp").forward(req, resp);
             return;
         }
         if ("/register".equals(path)) {
-            req.getRequestDispatcher("/candidate/register.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/candidate/register.jsp").forward(req, resp);
             return;
         }
         if ("/tests".equals(path)) {
             try {
                 List<TestItem> tests = examService.listTests();
                 req.setAttribute("tests", tests);
-                req.getRequestDispatcher("/candidate/tests.jsp").forward(req, resp);
+                req.getRequestDispatcher("/jsp/candidate/tests.jsp").forward(req, resp);
             } catch (SQLException e) {
                 throw new ServletException(e);
             }
@@ -48,23 +48,38 @@ public class CandidateServlet extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/candidate/register");
                 return;
             }
+            Candidate candidate = (Candidate) session.getAttribute("candidate");
             int testId = Integer.parseInt(req.getParameter("testId"));
             try {
-                List<TestItem> tests = examService.listTests();
-                TestItem selectedTest = tests.stream().filter(test -> test.getTestId() == testId).findFirst().orElse(null);
+                TestItem selectedTest = examService.getTest(testId);
                 if (selectedTest == null) {
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND);
                     return;
                 }
-                String submittedKey = "submitted_" + testId;
-                if (session.getAttribute(submittedKey) != null) {
+                // Only tests whose schedule window contains the DB's current time can be taken.
+                if (!selectedTest.isRunning()) {
+                    req.setAttribute("error", "UPCOMING".equals(selectedTest.getStatus())
+                            ? "This test has not started yet. It opens at " + selectedTest.getStartTime() + "."
+                            : "This test is closed. It ended at " + selectedTest.getEndTime() + ".");
+                    List<TestItem> tests = examService.listTests();
+                    req.setAttribute("tests", tests);
+                    req.getRequestDispatcher("/jsp/candidate/tests.jsp").forward(req, resp);
+                    return;
+                }
+                if (examService.hasSubmittedAttempt(candidate.getCandidateId(), testId)) {
+                    resp.sendRedirect(req.getContextPath() + "/candidate/results");
+                    return;
+                }
+                long remainingSeconds = examService.startOrResumeAttempt(candidate.getCandidateId(), selectedTest);
+                if (remainingSeconds < 0) {
                     resp.sendRedirect(req.getContextPath() + "/candidate/results");
                     return;
                 }
                 List<Question> questions = examService.getQuestionsForTest(testId);
                 req.setAttribute("test", selectedTest);
                 req.setAttribute("questions", questions);
-                req.getRequestDispatcher("/candidate/take.jsp").forward(req, resp);
+                req.setAttribute("remainingSeconds", remainingSeconds);
+                req.getRequestDispatcher("/jsp/candidate/take.jsp").forward(req, resp);
             } catch (Exception e) {
                 throw new ServletException(e);
             }
@@ -80,7 +95,7 @@ public class CandidateServlet extends HttpServlet {
             try {
                 List<Result> results = examService.getResultsForCandidate(candidate.getCandidateId());
                 req.setAttribute("results", results);
-                req.getRequestDispatcher("/candidate/results.jsp").forward(req, resp);
+                req.getRequestDispatcher("/jsp/candidate/results.jsp").forward(req, resp);
             } catch (SQLException e) {
                 throw new ServletException(e);
             }
@@ -96,7 +111,7 @@ public class CandidateServlet extends HttpServlet {
             try {
                 Result latest = examService.getLatestResult(candidate.getCandidateId());
                 req.setAttribute("latestResult", latest);
-                req.getRequestDispatcher("/candidate/analysis.jsp").forward(req, resp);
+                req.getRequestDispatcher("/jsp/candidate/analysis.jsp").forward(req, resp);
             } catch (SQLException e) {
                 throw new ServletException(e);
             }
@@ -139,7 +154,7 @@ public class CandidateServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/candidate/tests");
         } catch (Exception e) {
             req.setAttribute("error", e.getMessage());
-            req.getRequestDispatcher("/candidate/register.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/candidate/register.jsp").forward(req, resp);
         }
     }
 
@@ -153,21 +168,29 @@ public class CandidateServlet extends HttpServlet {
         int testId = Integer.parseInt(req.getParameter("testId"));
         String testName = req.getParameter("testName");
         try {
-            String submittedKey = "submitted_" + testId;
-            if (session.getAttribute(submittedKey) != null) {
+            // Duplicate-submission guard is DB-backed, so it survives session loss.
+            if (examService.hasSubmittedAttempt(candidate.getCandidateId(), testId)) {
                 resp.sendRedirect(req.getContextPath() + "/candidate/results");
                 return;
             }
+            // Server-side deadline check against the DB clock (with a short grace window);
+            // an expired attempt is scored with whatever answers arrived.
+            boolean onTime = examService.isSubmissionOnTime(candidate.getCandidateId(), testId);
             List<Question> questions = examService.getQuestionsForTest(testId);
             String[] answers = new String[questions.size()];
-            for (int i = 0; i < questions.size(); i++) {
-                answers[i] = req.getParameter("answer_" + questions.get(i).getQuestionId());
+            if (onTime) {
+                for (int i = 0; i < questions.size(); i++) {
+                    answers[i] = req.getParameter("answer_" + questions.get(i).getQuestionId());
+                }
             }
             Result result = examService.evaluate(candidate.getCandidateId(), testId, testName, questions, answers);
             examService.saveResult(result);
-            session.setAttribute(submittedKey, true);
+            examService.markAttemptSubmitted(candidate.getCandidateId(), testId);
+            if (!onTime) {
+                req.setAttribute("timeExpired", true);
+            }
             req.setAttribute("result", result);
-            req.getRequestDispatcher("/candidate/result.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/candidate/result.jsp").forward(req, resp);
         } catch (Exception e) {
             throw new ServletException(e);
         }

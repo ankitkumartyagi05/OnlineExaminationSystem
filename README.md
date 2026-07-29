@@ -3,11 +3,7 @@
 ## 🚀 Smart Web-Based Examination Platform
 
 ### 🌍 Live Deployments
-
-| Platform | URL |
-|----------|-----|
-| 🚀 Render | https://onlineexaminationsystem-ftie.onrender.com/ |
-| 🚄 Railway | https://onlineexaminationsystem-production-f1ca.up.railway.app/ |
+|
 
 ### 📂 GitHub Repository
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.examportal.dao.CandidateDao;
+import com.examportal.dao.ExamAttemptDao;
 import com.examportal.dao.QuestionDao;
 import com.examportal.dao.ResultDao;
 import com.examportal.dao.TestDao;
@@ -18,6 +19,7 @@ public class ExamService {
     private final QuestionDao questionDao = new QuestionDao();
     private final TestDao testDao = new TestDao();
     private final ResultDao resultDao = new ResultDao();
+    private final ExamAttemptDao attemptDao = new ExamAttemptDao();
 
     public Candidate registerCandidate(String fullName, String rollNumber, String email) throws SQLException {
         if (fullName == null || fullName.isBlank() || rollNumber == null || rollNumber.isBlank()) {
@@ -53,6 +55,36 @@ public class ExamService {
 
     public List<TestItem> listTests() throws SQLException {
         return testDao.findAllTests();
+    }
+
+    /** Only tests whose schedule window contains the current database time. */
+    public List<TestItem> listRunningTests() throws SQLException {
+        return testDao.findRunningTests();
+    }
+
+    public TestItem getTest(int testId) throws SQLException {
+        return testDao.findById(testId);
+    }
+
+    /**
+     * Starts (or resumes) a timed attempt and returns the remaining seconds,
+     * computed by the database clock. -1 means the attempt was already submitted.
+     */
+    public long startOrResumeAttempt(int candidateId, TestItem test) throws SQLException {
+        return attemptDao.startOrResume(candidateId, test.getTestId(), test.getDurationMinutes());
+    }
+
+    /** True if a submission arriving now is still inside the attempt's deadline. */
+    public boolean isSubmissionOnTime(int candidateId, int testId) throws SQLException {
+        return attemptDao.isWithinDeadline(candidateId, testId, 15);
+    }
+
+    public void markAttemptSubmitted(int candidateId, int testId) throws SQLException {
+        attemptDao.markSubmitted(candidateId, testId);
+    }
+
+    public boolean hasSubmittedAttempt(int candidateId, int testId) throws SQLException {
+        return attemptDao.hasSubmitted(candidateId, testId);
     }
 
     public List<Question> getQuestionsForTest(int testId) throws SQLException {

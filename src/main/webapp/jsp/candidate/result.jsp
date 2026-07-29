@@ -17,6 +17,9 @@
 <div class="container py-5">
     <div class="glass p-4 p-lg-5">
         <h2 class="mb-3">Result Generated</h2>
+        <% if (request.getAttribute("timeExpired") != null) { %>
+        <div class="alert alert-warning">Time expired before submission — answers received after the deadline were not counted.</div>
+        <% } %>
         <% if (result != null) { %>
         <div class="row g-4">
             <div class="col-md-6">

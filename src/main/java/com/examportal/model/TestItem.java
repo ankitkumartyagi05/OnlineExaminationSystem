@@ -6,6 +6,10 @@ public class TestItem {
     private String subject;
     private int durationMinutes;
     private int totalQuestions;
+    private String startTime;
+    private String endTime;
+    // Computed against the database clock: UPCOMING, RUNNING or CLOSED.
+    private String status = "RUNNING";
 
     public TestItem() {
     }
@@ -56,5 +60,33 @@ public class TestItem {
 
     public void setTotalQuestions(int totalQuestions) {
         this.totalQuestions = totalQuestions;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public boolean isRunning() {
+        return "RUNNING".equals(status);
     }
 }

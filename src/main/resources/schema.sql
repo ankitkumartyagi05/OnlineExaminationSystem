@@ -1,3 +1,4 @@
+
 CREATE TABLE IF NOT EXISTS candidates (
     candidate_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(255) NOT NULL,
@@ -25,8 +26,11 @@ CREATE TABLE IF NOT EXISTS tests (
     subject VARCHAR(150) NOT NULL,
     duration_minutes INT NOT NULL DEFAULT 30,
     total_questions INT NOT NULL DEFAULT 0,
+    start_time DATETIME NULL,
+    end_time DATETIME NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
+
 
 CREATE TABLE IF NOT EXISTS test_questions (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -52,3 +56,32 @@ CREATE TABLE IF NOT EXISTS results (
     FOREIGN KEY (candidate_id) REFERENCES candidates(candidate_id) ON DELETE CASCADE,
     FOREIGN KEY (test_id) REFERENCES tests(test_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS exam_attempts (
+    attempt_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    candidate_id BIGINT NOT NULL,
+    test_id BIGINT NOT NULL,
+    started_at DATETIME NOT NULL,
+    deadline DATETIME NOT NULL,
+    submitted BOOLEAN NOT NULL DEFAULT FALSE,
+    UNIQUE KEY uk_attempt (candidate_id, test_id),
+    FOREIGN KEY (candidate_id) REFERENCES candidates(candidate_id) ON DELETE CASCADE,
+    FOREIGN KEY (test_id) REFERENCES tests(test_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+INSERT IGNORE INTO questions (question_id, subject, question_text, option_a, option_b, option_c, option_d, correct_answer, marks) VALUES
+(1, 'Java', 'Which keyword is used to create an object in Java?', 'new', 'class', 'this', 'void', 'A', 1),
+(2, 'Java', 'Which of these is NOT a Java primitive type?', 'int', 'boolean', 'String', 'double', 'C', 1),
+(3, 'Java', 'Which collection preserves insertion order?', 'HashSet', 'ArrayList', 'HashMap', 'TreeSet', 'B', 1),
+(4, 'Java', 'What does JVM stand for?', 'Java Virtual Machine', 'Java Verified Module', 'Joint Virtual Machine', 'Java Variable Method', 'A', 1),
+(5, 'Java', 'Which keyword prevents a method from being overridden?', 'static', 'const', 'super', 'final', 'D', 1);
+
+INSERT IGNORE INTO tests (test_id, test_name, subject, duration_minutes, total_questions, start_time, end_time) VALUES
+(1, 'Java Fundamentals', 'Java', 15, 5, NULL, NULL);
+
+INSERT IGNORE INTO test_questions (test_id, question_id) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5);

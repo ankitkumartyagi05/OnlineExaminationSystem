@@ -24,6 +24,9 @@
             </div>
             <a href="${pageContext.request.contextPath}/" class="btn btn-outline-light">Home</a>
         </div>
+        <% String error = (String) request.getAttribute("error"); if (error != null) { %>
+        <div class="alert alert-warning"><%= error %></div>
+        <% } %>
         <% if (tests == null || tests.isEmpty()) { %>
         <div class="alert alert-info">No tests are available yet.</div>
         <% } else { %>
@@ -32,11 +35,30 @@
             <div class="col-md-6">
                 <div class="card h-100 border-0 bg-dark text-light">
                     <div class="card-body">
-                        <h5 class="card-title"><%= test.getTestName() %></h5>
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="card-title"><%= test.getTestName() %></h5>
+                            <% if (test.isRunning()) { %>
+                            <span class="badge bg-success">Running</span>
+                            <% } else if ("UPCOMING".equals(test.getStatus())) { %>
+                            <span class="badge bg-warning text-dark">Upcoming</span>
+                            <% } else { %>
+                            <span class="badge bg-secondary">Closed</span>
+                            <% } %>
+                        </div>
                         <p class="card-text mb-2">Subject: <%= test.getSubject() %></p>
                         <p class="card-text mb-2">Duration: <%= test.getDurationMinutes() %> mins</p>
-                        <p class="card-text mb-3">Questions: <%= test.getTotalQuestions() %></p>
+                        <p class="card-text mb-2">Questions: <%= test.getTotalQuestions() %></p>
+                        <% if (test.getStartTime() != null || test.getEndTime() != null) { %>
+                        <p class="card-text mb-3 small text-light-emphasis">
+                            <% if (test.getStartTime() != null) { %>Opens: <%= test.getStartTime() %><br><% } %>
+                            <% if (test.getEndTime() != null) { %>Closes: <%= test.getEndTime() %><% } %>
+                        </p>
+                        <% } %>
+                        <% if (test.isRunning()) { %>
                         <a href="${pageContext.request.contextPath}/candidate/take?testId=<%= test.getTestId() %>" class="btn btn-primary">Start Test</a>
+                        <% } else { %>
+                        <button class="btn btn-secondary" disabled><%= "UPCOMING".equals(test.getStatus()) ? "Not Started Yet" : "Closed" %></button>
+                        <% } %>
                     </div>
                 </div>
             </div>

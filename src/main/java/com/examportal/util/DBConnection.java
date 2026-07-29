@@ -12,17 +12,39 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Dual-database connection utility.
+ * Priority order for resolving the JDBC URL:
+ *   1. Environment variables  (JDBC_URL or MYSQLHOST+MYSQLPORT+MYSQL_DATABASE)
+ *   2. .env file              (same keys)
+ *   3. db.properties          (jdbc.url / jdbc.username / jdbc.password)
+ *   4. H2 in-memory fallback  (zero-config local development)
+ *
+ * When MySQL is configured it will be used; otherwise H2 starts automatically.
+ */
 public class DBConnection {
     private static final Properties props = new Properties();
     private static final Properties envOverrides = new Properties();
+    private static boolean usingMySQL = false;
 
     static {
         loadEnvironmentOverrides();
         loadProperties();
+        // Try loading the MySQL driver first; fall back to H2
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
+            usingMySQL = true;
+            System.out.println("DBConnection: MySQL driver loaded");
         } catch (ClassNotFoundException e) {
-            throw new ExceptionInInitializerError(e);
+            System.out.println("DBConnection: MySQL driver not found, trying H2");
+        }
+        if (!usingMySQL) {
+            try {
+                Class.forName("org.h2.Driver");
+                System.out.println("DBConnection: H2 driver loaded (fallback)");
+            } catch (ClassNotFoundException e2) {
+                throw new ExceptionInInitializerError("No JDBC driver found (tried MySQL and H2)");
+            }
         }
     }
 
@@ -62,28 +84,60 @@ public class DBConnection {
     }
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(resolveUrl(), resolveUser(), resolvePassword());
+        String url = resolveUrl();
+        String user = resolveUser();
+        String pass = resolvePassword();
+
+        try {
+            Connection conn = DriverManager.getConnection(url, user, pass);
+            return conn;
+        } catch (SQLException e) {
+            // If MySQL was configured but unreachable, fall back to H2 in dev mode
+            if (url.startsWith("jdbc:mysql")) {
+                String h2Url = "jdbc:h2:mem:examdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1";
+                System.err.println("DBConnection: MySQL connection failed (" + e.getMessage() +
+                        "), falling back to H2 in-memory database");
+                try {
+                    Class.forName("org.h2.Driver");
+                } catch (ClassNotFoundException cnf) {
+                    throw e; // No H2 either — rethrow original
+                }
+                return DriverManager.getConnection(h2Url, "sa", "");
+            }
+            throw e;
+        }
+    }
+
+    /** Returns true when the resolved URL points at MySQL. */
+    public static boolean isMySQLConfigured() {
+        return resolveUrl().startsWith("jdbc:mysql");
     }
 
     private static String resolveUrl() {
+        // 1. Direct JDBC_URL env var
         String envUrl = getEnv("JDBC_URL");
         if (!envUrl.isEmpty()) {
             return envUrl;
         }
 
+        // 2. Railway-style individual MySQL env vars
         String mysqlHost = getEnv("MYSQLHOST");
         String mysqlPort = getEnv("MYSQLPORT");
         String mysqlDatabase = getEnv("MYSQL_DATABASE");
         if (!mysqlHost.isEmpty() && !mysqlPort.isEmpty() && !mysqlDatabase.isEmpty()) {
-            return "jdbc:mysql://" + mysqlHost + ":" + mysqlPort + "/" + mysqlDatabase + "?useSSL=true&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8&connectTimeout=15000&socketTimeout=60000";
+            return "jdbc:mysql://" + mysqlHost + ":" + mysqlPort + "/" + mysqlDatabase +
+                    "?useSSL=true&allowPublicKeyRetrieval=true&serverTimezone=UTC" +
+                    "&characterEncoding=UTF-8&connectTimeout=15000&socketTimeout=60000";
         }
 
-        String propUrl = resolvePropertyValue(props.getProperty("db.url"));
+        // 3. db.properties
+        String propUrl = resolvePropertyValue(props.getProperty("jdbc.url"));
         if (!propUrl.isEmpty()) {
             return propUrl;
         }
 
-        return "jdbc:mysql://localhost:3306/exam_portal?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8&connectTimeout=15000&socketTimeout=60000";
+        // 4. Fallback
+        return "jdbc:h2:mem:examdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1";
     }
 
     private static String resolveUser() {
@@ -95,7 +149,7 @@ public class DBConnection {
         if (!railwayUser.isEmpty()) {
             return railwayUser;
         }
-        return resolvePropertyValue(props.getProperty("db.username"));
+        return resolvePropertyValue(props.getProperty("jdbc.username"));
     }
 
     private static String resolvePassword() {
@@ -107,7 +161,7 @@ public class DBConnection {
         if (!railwayPass.isEmpty()) {
             return railwayPass;
         }
-        return resolvePropertyValue(props.getProperty("db.password"));
+        return resolvePropertyValue(props.getProperty("jdbc.password"));
     }
 
     private static String resolvePropertyValue(String value) {
